@@ -1,2 +1,14 @@
-source /etc/environment
-nohup pagekite.py --clean --frontend=rovers.yakcollective.org:80 --service_on=http:$YAK_ROVER_NAME.rovers.yakcollective.org:localhost:5000:$1 &
+#!/usr/bin/env bash
+
+#source /etc/environment
+
+if [[ -x /usr/bin/pagekite ]]
+then
+  PK=/usr/bin/pagekite
+else
+  PK=pagekite.py
+fi
+
+mkdir -p ~/logs/pagekite
+
+nohup $PK --clean --frontend=rovers.yakcollective.org:80 --service_on=http:$YAK_ROVER_NAME.rovers.yakcollective.org:localhost:5000:$1 > ~/logs/pagekite/$YAK_ROVER_NAME.log &
