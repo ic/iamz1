@@ -19,6 +19,8 @@ listofrag.sort()
 reps=1
 insist=False
 
+YAKROVER_NAME=os.environ.get("YAK_ROVER_NAME", "unknown")
+
 @app.route('/')
 def index():
     global listofrag, reps
@@ -136,9 +138,9 @@ def talkbut():
 
 
 def twitchintegrate():
-    return ('''
+    return (f'''
 <iframe
-    src="https://player.twitch.tv/?channel=yakrovers&parent=wwg.rovers.yakcollective.org"
+    src="https://player.twitch.tv/?channel=yakrovers_{YAKROVER_NAME.lower()}&parent={YAKROVER_NAME.lower()}.rovers.yakcollective.org"
     height="500"
     width="500"
     allowfullscreen="true">
