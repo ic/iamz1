@@ -10,7 +10,31 @@ then
   sudo bash -c "echo YAK_ROVER_NAME=$RNAME >> /etc/environment"
 else
   echo "YAK_ROVER_NAME already set in /etc/environment. Unsure whether safe to continue, aborting."
-  #exit 1
+  exit 1
+fi
+
+read -p "[Optional] Please choose a pin number for the camera pan servo (default=12): " YAK_ROVER_CAM_PAN_PIN
+if [[ -n $YAK_ROVER_CAM_PAN_PIN ]]
+then
+  sudo bash -c "echo YAK_ROVER_CAM_PAN_PIN=$YAK_ROVER_CAM_PAN_PIN >> /etc/environment"
+fi
+
+read -p "[Optional] Please choose a pin number for the camera tilt servo (default=13): " YAK_ROVER_CAM_TILT_PIN
+if [[ -n $YAK_ROVER_CAM_TILT_PIN ]]
+then
+  sudo bash -c "echo YAK_ROVER_CAM_TILT_PIN=$YAK_ROVER_CAM_TILT_PIN >> /etc/environment"
+fi
+
+read -p "[Optional] Please choose a physical pin number for the bus RX (default=7): " YAK_ROVER_BUS_RX_PIN
+if [[ -n $YAK_ROVER_BUS_RX_PIN ]]
+then
+  sudo bash -c "echo YAK_ROVER_BUS_RX_PIN=$YAK_ROVER_BUS_RX_PIN >> /etc/environment"
+fi
+
+read -p "[Optional] Please choose a physical pin number for the bus TX (default=13): " YAK_ROVER_BUS_TX_PIN
+if [[ -n $YAK_ROVER_BUS_TX_PIN ]]
+then
+  sudo bash -c "echo YAK_ROVER_BUS_TX_PIN=$YAK_ROVER_BUS_TX_PIN >> /etc/environment"
 fi
 
 sudo apt-get update
