@@ -56,9 +56,10 @@ Servos = ()
 pi = pigpio.pi()
 def initPWMServo(d):
     global Servos
-    
-    servo1 = PWM_Servo(pi, 12, deviation=d[0], control_speed=True)  # 扩展板上的1
-    servo2 = PWM_Servo(pi, 13, deviation=d[1], control_speed=True)  # 2
+    YAK_ROVER_CAM_PAN_PIN = os.environ.get("YAK_ROVER_CAM_PAN_PIN", 12)
+    YAK_ROVER_CAM_TILT_PIN = os.environ.get("YAK_ROVER_CAM_TILT_PIN", 13)
+    servo1 = PWM_Servo(pi, YAK_ROVER_CAM_PAN_PIN, deviation=d[0], control_speed=True)
+    servo2 = PWM_Servo(pi, YAK_ROVER_CAM_TILT_PIN, deviation=d[1], control_speed=True)
     Servos = (servo1, servo2)
 
 d = [0, 0]
