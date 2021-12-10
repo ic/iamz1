@@ -38,8 +38,8 @@ LOBOT_SERVO_LED_CTRL_READ        = 34
 LOBOT_SERVO_LED_ERROR_WRITE      = 35
 LOBOT_SERVO_LED_ERROR_READ       = 36
 
-rx_pin = os.environ.get("YAK_ROVER_BUS_RX_PIN", 7)
-tx_pin = os.environ.get("YAK_ROVER_BUS_TX_PIN", 13)
+rx_pin = int(os.environ.get("YAK_ROVER_BUS_RX_PIN", 7))
+tx_pin = int(os.environ.get("YAK_ROVER_BUS_TX_PIN", 13))
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
