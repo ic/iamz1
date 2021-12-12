@@ -5,7 +5,7 @@ WHEREIRUNDIR="/home/pi/test/iamz1/"
 import sys
 sys.path.append(WHEREIRUNDIR)
 import os
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, render_template
 import subprocess
 import talk
 import rpcservices as rpc
@@ -24,8 +24,16 @@ YAKROVER_NAME=os.environ.get("YAK_ROVER_NAME", "unknown")
 @app.route('/')
 def index():
     global listofrag, reps
-    buts=[ragbutton(f,reps) for f in listofrag]+[unloadbut()]+repbuts()+cambut()+[talkbut()]+[insistbut()]+[twitchintegrate()]
-    return " ".join(buts)
+    #buts=["movement commands:"]+[ragbutton(f,reps) for f in listofrag]+["<br>Save power(unload):"]+[unloadbut()]+["<br>How many repeats:"]+repbuts
+    #return " ".join(buts)
+    return render_template("home.html",
+            twitch=twitchintegrate(),
+            cam=cambut(),
+            repeats=repbuts(),
+            #talk=talkbut(), TODO
+            #insist=insistbut(), TODO
+            )
+
     
 @app.route('/dorag',methods=["POST"])
 def dorag():
@@ -97,13 +105,10 @@ def dosetinsist():
 
 
 def repbuts():
-    s=[]
-    global reps
-    for i in [1,2,5,10]:
-        #q="*" if reps==i else "" #now with fetch, buttons not redrawn. will need to be a toggle or something, on client side
-        q=""
-        s.append('''<button onclick="fetch('/setrep?value={0}',{{method:'POST'}})">{1}{0}</button>'''.format(i,q))
-    return s
+    return {
+            f"r{r}": f"fetch('/setrep?value={r}',{{method:'POST'}})"
+            for r in [1, 2, 5, 10]
+            }
 
 def insistbut():
     s='''<button onclick="fetch('/setinsist?value='+document.getElementById('insist').checked,{method:'POST'})">Insist(move#1)</button><input type="checkbox" id="insist" name="insist">'''
@@ -120,18 +125,22 @@ def unloadbut():
     return '''<button onclick="fetch('/unload',{method:'POST'})">unload</button>'''
 
 def cambut():
-    s=[]
-    s.append('''<button onclick="fetch('/docam?name=rest&param=none',{method:'POST'})">Cam rest</button>''')
-    s.append('''<button onclick="fetch('/docam?name=pan&param=go',{method:'POST'})">pan scan</button>''')
-    s.append('''<button onclick="fetch('/docam?name=pan&param=plus',{method:'POST'})">pan +</button>''')
-    s.append('''<button onclick="fetch('/docam?name=pan&param=minus',{method:'POST'})">pan -</button>''')
-    s.append('''<button onclick="fetch('/docam?name=tilt&param=go',{method:'POST'})">tilt scan</button>''')
-    s.append('''<button onclick="fetch('/docam?name=tilt&param=plus',{method:'POST'})">tilt +</button>''')
-    s.append('''<button onclick="fetch('/docam?name=tilt&param=minus',{method:'POST'})">tilt -</button>''')
-    s.append('''<button onclick="fetch('/docam?name=tilt&param='+document.getElementById('tiltval').value,{method:'POST'})">tilt to</button><input type="text" id="tiltval" name="tiltval">''')
-    s.append('''<button onclick="fetch('/docam?name=pan&param='+document.getElementById('panval').value,{method:'POST'})">pan to</button><input type="text" id="panval" name="panval">''')
-    
-    return s
+    #
+    # Missing tilt_to and pan_to (need to add the input text as shown in original code).
+    #
+    #s.append('''<button onclick="fetch('/docam?name=tilt&param='+document.getElementById('tiltval').value,{method:'POST'})">tilt to</button><input type="text" id="tiltval" name="tiltval">''')
+    #s.append('''<button onclick="fetch('/docam?name=pan&param='+document.getElementById('panval').value,{method:'POST'})">pan to</button><input type="text" id="panval" name="panval">''')
+    return {
+            "cam_rest": "fetch('/docam?name=rest&param=none',{method:'POST'})",
+            "pan_scan": "fetch('/docam?name=pan&param=go',{method:'POST'})",
+            "pan_l": "fetch('/docam?name=pan&param=plus',{method:'POST'})",
+            "pan_r": "fetch('/docam?name=pan&param=minus',{method:'POST'})",
+            "tilt_scan": "fetch('/docam?name=tilt&param=go',{method:'POST'})",
+            "tilt_u": "fetch('/docam?name=tilt&param=plus',{method:'POST'})",
+            "tilt_d": "fetch('/docam?name=tilt&param=minus',{method:'POST'})",
+            "tilt_to": "fetch('/docam?name=tilt&param='+document.getElementById('tiltval').value,{method:'POST'})",
+            "pan_to": "fetch('/docam?name=pan&param='+document.getElementById('panval').value,{method:'POST'})",
+            }
 
 def talkbut():
     return ('''<button onclick="fetch('/dosaythis?text=%20'+document.getElementById('saythis').value,{method:'POST'})">say this</button><input type="text" id="saythis" name="saythis">''')
