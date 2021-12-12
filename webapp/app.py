@@ -24,12 +24,12 @@ YAKROVER_NAME=os.environ.get("YAK_ROVER_NAME", "unknown")
 @app.route('/')
 def index():
     global listofrag, reps
-    #buts=["movement commands:"]+[ragbutton(f,reps) for f in listofrag]+["<br>Save power(unload):"]+[unloadbut()]+["<br>How many repeats:"]+repbuts
-    #return " ".join(buts)
     return render_template("home.html",
             twitch=twitchintegrate(),
             cam=cambut(),
             repeats=repbuts(),
+            unload="fetch('/unload',{method:'POST'})",
+            rag={ r: ragbutton(r, reps) for r in listofrag },
             #talk=talkbut(), TODO
             #insist=insistbut(), TODO
             )
@@ -116,8 +116,7 @@ def insistbut():
 
     
 def ragbutton(s,rep):
-    s='''<button onclick="fetch('/dorag?name={0}&repeat={1}',{{method:'POST'}})">{0}</button>'''.format(s,rep) #later change to a form or something so we can also read the repeats setting. or simply reserve the page
-    return s
+    return f"fetch('/dorag?name={s}&repeat={rep}',{{method:'POST'}})" #later change to a form or something so we can also read the repeats setting. or simply reserve the page
 
 #onclick="window.location.href='/dorag?name={0}&repeat={1}'">{0}</button>'''.
 
@@ -138,8 +137,8 @@ def cambut():
             "tilt_scan": "fetch('/docam?name=tilt&param=go',{method:'POST'})",
             "tilt_u": "fetch('/docam?name=tilt&param=plus',{method:'POST'})",
             "tilt_d": "fetch('/docam?name=tilt&param=minus',{method:'POST'})",
-            "tilt_to": "fetch('/docam?name=tilt&param='+document.getElementById('tiltval').value,{method:'POST'})",
-            "pan_to": "fetch('/docam?name=pan&param='+document.getElementById('panval').value,{method:'POST'})",
+            #"tilt_to": "fetch('/docam?name=tilt&param='+document.getElementById('tiltval').value,{method:'POST'})",
+            #"pan_to": "fetch('/docam?name=pan&param='+document.getElementById('panval').value,{method:'POST'})",
             }
 
 def talkbut():

@@ -135,8 +135,8 @@ body * {
 				<div id="0" class="key command">Flat</div>
 				<div id="wave" class="key command">Wave</div>
 				<div id="twist" class="key command">Twist</div>
-				<div id="twist_bf" class="key command">Twist b/f</div>
-				<div id="twist_lr" class="key command">Twist l/r</div>
+				<div id="twist_f" class="key command">Twist b/f</div>
+				<div id="twist_l" class="key command">Twist l/r</div>
 				<div id="cam_rest" class="key command">Cam Rest</div>
 				<div id="pan_scan" class="key command">Pan Scan</div>
 				<div id="pan_l" class="key command">Pan Left</div>
@@ -148,16 +148,13 @@ body * {
 
 			<div class="mx-auto overrides-base" style="width:1280px;">
 				<div class="invisible command"></div>
-				<div class="invisible command"></div>
-				<div class="invisible command"></div>
-				<div class="invisible command"></div>
 				<div id="unload" class="key command">Unload</div>
 				<div id="r1" class="key command">Repeat 1</div>
 				<div id="r2" class="key command">Repeat 2</div>
 				<div id="r5" class="key command">Repeat 5</div>
 				<div id="r10" class="key command">Repeat 10</div>
 				<div class="invisible command"></div>
-				<div id="repeat" class="key tab"></div>
+				<div id="repeat" class="key space"></div>
 			</div>
 
 			<div class="mx-auto controls-label-base" style="width:1280px;">
@@ -177,11 +174,11 @@ body * {
 			<div class="mx-auto controls-base" style="width:1280px;">
 				<div class="invisible command"></div>
 				<div class="invisible command"></div>
-				<div class="key command">↑</div>
+				<div id="go_forward_low" class="key command">↑</div>
 				<div class="invisible command"></div>
 				<div class="invisible command"></div>
 				<div class="invisible command"></div>
-				<div class="key command">↑</div>
+				<div id="turn_left_low" class="key command">↑</div>
 				<div class="invisible command"></div>
 				<div class="invisible command"></div>
 				<div class="invisible command"></div>
@@ -203,18 +200,23 @@ body * {
 		</body>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 				<script>
+					document.getElementById("unload").onclick = function() { {{ unload | safe }} };
 					{% for key, value in cam.items() %}
 					document.getElementById("{{ key | safe }}").onclick = function () { {{ value | safe }} };
 					{% endfor %}
 					{% for key, value in repeats.items() %}
 					document.getElementById("{{ key | safe }}").onclick = function () {
 											{{ value | safe }}
-											document.getElementById("repeat").value = "Repeating {{ key }} times";
+											document.getElementById("repeat").innerHTML = "Repeating {{ key[1:] }} times";
 										};
+					{% endfor %}
+					{% for key, value in rag.items() %}
+					//document.getElementById("{{ key | safe }}").onclick = function () { {{ value | safe }} };
+					console.log("{{key}}", "{{value}}");
 					{% endfor %}
 
 					document.addEventListener('DOMContentLoaded', (event) => {
-											document.getElementById("repeat").value = "Repeating 1 times";
+											document.getElementById("repeat").innerHTML = "Repeating 1 times";
 										});
 				</script>
 
